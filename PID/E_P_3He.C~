@@ -1,0 +1,53 @@
+
+
+void Cherenkov_Cut_3He(Int_t run)
+{
+//============  Reading the Rootfile =======================//
+
+  const TString rootfilePath = "/home/skbarcus/Tritium/Analysis/He3/Rootfiles/";
+  std::ostringstream str;
+  str << rootfilePath<<"e08014_"<<run;
+  TString basename = str.str().c_str();
+  TString rootfile = basename + ".root";
+  TChain* T;
+  TChain*ev;
+
+  if(run < 20000)
+    {
+      T = new TChain("T");
+      ev = new TChain("RIGHT");
+    }
+  if(run > 20000)
+    {
+      T = new TChain("T");
+      ev = new TChain("EVRIGHT");
+    }
+
+  Long_t split=0;
+
+  char* file = 0;
+
+  //====adding splits rootfiles =======================//
+
+  Long_t u=0;
+  while ( !gSystem->AccessPathName(rootfile.Data()) ) 
+    {
+     T->Add(rootfile.Data());
+     ev->Add(rootfile.Data());
+     cout << "ROOT file " << rootfile << " added to TChain." << endl;
+     u++;
+     rootfile = basename + "_" + u + ".root";
+   }
+
+  if(!T->GetEntries())
+    {
+     cerr<< "Not root file was found" << endl;
+     return;
+  }
+   //==finish adding splits rootfiles=====================//
+  T->SetBranchStatus("*",0);
+  T->SetBranchStatus("L.cer.asum_c",1);
+  T->SetBranchStatus("L.prl1.e",1);
+  T->SetBranchStatus("L.prl2.e",1);
+
+}
