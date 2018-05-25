@@ -9,12 +9,12 @@ void Cherenkov_Eff()
   Double_t ymin = -0.03, ymax = 0.03;
   Double_t xbmin = 2.95, xbmax = 3.15;
   */
-  Double_t shmin=0.2;
-  Double_t thmin=-0.03, thmax=0.03;
-  Double_t phmin=-0.02, phmax=0.02;
-  Double_t dpmin=-0.0, dpmax=0.03;
+  Double_t shmin=0.;
+  Double_t thmin=-0.042, thmax=0.049;
+  Double_t phmin=-0.03, phmax=0.03;
+  Double_t dpmin=-0.02, dpmax=0.03;
   Double_t ymin = -0.03, ymax = 0.03;
-  Double_t xbmin = 2.96, xbmax = 3.06;
+  Double_t xbmin = 2.95, xbmax = 3.10;
       
   /*
     for(Int_t i=0;i<5;i++)
@@ -116,15 +116,18 @@ void Cherenkov_Eff()
   TCut ct_T3 =Form("(DBB.evtypebits&1<<3)==1<<3");
   TCut ct_T7 =Form("(DBB.evtypebits&1<<7)==1<<7");
 
-  //Plot general Cherenkoc efficiencies. 
+  //Plot general Cherenkov efficiencies. 
   TCanvas* c1=new TCanvas("c1");
   c1->SetGrid();
   c1->Divide(2,1);
   c1->cd(1);
-  //T->Draw("L.cer.trx:L.cer.try>>h1(200,-1.,1.,200,-1.,1.)",ct_T3&&ct_1tr&&ct_th&&ct_ph&&ct_dp&&ct_ep,"colz");
-  T->Draw("L.cer.trx:L.cer.try>>h1(200,-1.,1.,200,-1.,1.)",ct_1tr&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb,"colz");
+  T->Draw("L.cer.try:L.cer.trx>>h1(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb&&ct_pr,"colz");
   c1->cd(2);
-  T->Draw("L.cer.trx:L.cer.try>>h2(200,-1.,1.,200,-1.,1.)",ct_1tr&&ct_T3&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb,"colz");
+  T->Draw("L.cer.try:L.cer.trx>>h2(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb&&ct_pr,"colz");
+
+  //T->Draw("L.cer.try:L.cer.trx>>h1(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T7&&ct_y&&ct_xb,"colz");
+  //c1->cd(2);
+  //T->Draw("L.cer.trx:L.cer.try>>h2(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_T7&&ct_y&&ct_xb,"colz");
   
   //Plot Cherenkov efficiencies binned in Cherenkov x and y.
   
@@ -132,9 +135,6 @@ void Cherenkov_Eff()
   c2->SetGrid();
   c2->Divide(2,1);
   //c2->cd(1);
-  T->Draw("L.cer.trx:L.cer.try>>h3(200,-1.,1.,200,-1.,1.)",ct_1tr&&ct_T3&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb,"colz");
-  /*
-  c2->cd(2);
-  T->Draw("L.cer.trx:L.cer.try>>h4(10,-1.,1.,4,-1.,1.)",ct_1tr&&ct_T3&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb,"colz");
-  */  
+  T->Draw("L.cer.try:L.cer.trx>>h3(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb&&ct_pr,"colz");
+  //T->Draw("L.cer.try:L.cer.trx>>h3(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_y&&ct_xb,"colz");
 }
