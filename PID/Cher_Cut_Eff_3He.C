@@ -1,11 +1,11 @@
 
 
 
-
-void Cher_Cut_Eff_3He(Int_t run)
+//void Cher_Cut_Eff_3He(Int_t run)
+void Cher_Cut_Eff_3He()
 {
 //============  Reading the Rootfile =======================//
-
+/*
   const TString rootfilePath = "/home/skbarcus/Tritium/Analysis/He3/Rootfiles/";
   std::ostringstream str;
   str << rootfilePath<<"e08014_"<<run;
@@ -47,19 +47,39 @@ void Cher_Cut_Eff_3He(Int_t run)
      return;
   }
    //==finish adding splits rootfiles=====================//
+*/
+  Int_t run = 1000; //Now doing all runs so this is just a placeholder. 
+  TChain *T = new TChain("T");
+  T->Add("/home/skbarcus/Tritium/Analysis/He3/Rootfiles/e08014_3892.root");
+  T->Add("/home/skbarcus/Tritium/Analysis/He3/Rootfiles/e08014_3893.root");
+  T->Add("/home/skbarcus/Tritium/Analysis/He3/Rootfiles/e08014_3894.root");
+  T->Add("/home/skbarcus/Tritium/Analysis/He3/Rootfiles/e08014_4073.root");
+  T->Add("/home/skbarcus/Tritium/Analysis/He3/Rootfiles/e08014_4074*.root");
+  T->Add("/home/skbarcus/Tritium/Analysis/He3/Rootfiles/e08014_4075*.root");
+
   T->SetBranchStatus("*",0);
   T->SetBranchStatus("L.cer.asum_c",1);
   T->SetBranchStatus("L.prl1.e",1);
   T->SetBranchStatus("L.prl2.e",1);
   T->SetBranchStatus("L.tr.p",1);
   T->SetBranchStatus("L.tr.n",1);
+  T->SetBranchStatus("L.tr.tg_y",1);
+  T->SetBranchStatus("L.tr.tg_th",1);
+  T->SetBranchStatus("L.tr.tg_ph",1);
+  T->SetBranchStatus("L.tr.tg_dp",1);
+  T->SetBranchStatus("DBB.evtypebits",   1);
 
-  Double_t L_cer=0.,L_prl1_e=0.,L_prl2_e=0.,L_tr_p=0.,L_tr_n=0.;//,data;
+  Double_t L_cer=0.,L_prl1_e=0.,L_prl2_e=0.,L_tr_p=0.,L_tr_n=0.,L_tr_tg_y[21],L_tg_th[21],L_tg_ph[21],L_tg_dp[21],evtypebits;//,data;
   T->SetBranchAddress("L.cer.asum_c",&L_cer);
   T->SetBranchAddress("L.prl1.e",&L_prl1_e);
   T->SetBranchAddress("L.prl2.e",&L_prl2_e);
   T->SetBranchAddress("L.tr.p",L_tr_p);      //If add & before L_tr_p breaks code.
   T->SetBranchAddress("L.tr.n",&L_tr_n);
+  T->SetBranchAddress("L.tr.tg_y",L_tr_tg_y);
+  T->SetBranchAddress("L.tr.tg_th",L_tg_th);
+  T->SetBranchAddress("L.tr.tg_ph",L_tg_ph);
+  T->SetBranchAddress("L.tr.tg_dp",L_tg_dp);
+  T->SetBranchAddress("DBB.evtypebits",   &evtypebits);
   //T->SetBranchAddress("Ndata.L.tr.p",&data);
 
   /*
@@ -80,19 +100,23 @@ void Cher_Cut_Eff_3He(Int_t run)
   Int_t show_sample_regions_in_opposite = 1;
   Int_t show_sample_regions = 0;
   Double_t ymax = 10000;
-  Double_t GC_cut = 150.;
+  Double_t GC_cut = 60.;//Previously 150 w/0 T3 cut.
+  Double_t ymin = -0.03, ymax = 0.03;
+  Double_t thmin = -0.042, thmax = 0.049;
+  Double_t phmin = -0.03, phmax = 0.03;
+  Double_t dpmin = -0.02, dpmax = 0.03;
   Double_t nevts = T->GetEntries(); 
-  Double_t nevts_ev = ev->GetEntries();
+  //Double_t nevts_ev = ev->GetEntries();
 
   cout<<"Number of entries in T = "<<nevts<<endl;
 
   //Define cuts on the Cherenkov spectrum to locate pions.
   Double_t gc_pi_lower = 0.0;           //Lower cut on GC to select pions.
-  Double_t gc_pi_upper = 10.0;           //Upper cut on GC to select pions.
+  Double_t gc_pi_upper = 80.0;           //Upper cut on GC to select pions. Previously 10.
 
   //Define cuts on the Cherenkov spectrum to locate good electrons.
-  Double_t gc_e_lower = 300.0;         //Lower cut on GC to select good e-.
-  Double_t gc_e_upper = 350.0;         //Upper cut on GC to select good e-.
+  Double_t gc_e_lower = 300.0;         //Lower cut on GC to select good e-. Previously 300.
+  Double_t gc_e_upper = 500.0;         //Upper cut on GC to select good e-. Previously 350.
 
   //Define cuts on the pion rejectors to locate pions.
   Double_t pr_pi_left = 100.0;          //Left cut on pion rejectors to select pions.
@@ -126,6 +150,11 @@ void Cher_Cut_Eff_3He(Int_t run)
   TCut ct_gc_e =  Form("%f<L.cer.asum_c&&L.cer.asum_c<%f",gc_e_lower,gc_e_upper);
   TCut ct_pr_pi = Form("L.prl2.e>%f&&L.prl2.e<%f&&L.prl1.e>%f&&L.prl1.e<%f",pr_pi_left,pr_pi_right,pr_pi_lower,pr_pi_upper);
   TCut ct_1tr = Form("L.tr.n==1");
+  TCut ct_y = Form("L.tr.tg_y>%f&&L.tr.tg_y<%f",ymin,ymax);
+  TCut ct_ph = Form("L.tr.tg_ph>%f&&L.tr.tg_ph<%f",phmin,phmax);
+  TCut ct_th = Form("L.tr.tg_th>%f&&L.tr.tg_th<%f",thmin,thmax);
+  TCut ct_dp = Form("L.tr.tg_dp>%f&&L.tr.tg_dp<%f",dpmin,dpmax);
+  TCut ct_T3 = Form("(DBB.evtypebits&1<<3)==1<<3");
   //TCut ct_pr_e = Form("(L.prl1.e+L.prl2.e)/(1000*L.tr.p)>%f&&(L.prl1.e+L.prl2.e)/(1000*L.tr.p)<%f&&(L.prl1.e+L.prl2.e)/(1000*L.tr.p)>%f&&(L.prl1.e+L.prl2.e)/(1000*L.tr.p)>%f&&(L.prl1.e+L.prl2.e)/(1000*L.tr.p)<%f",line11->Eval((L_prl1_e+L_prl2_e)/(1000*L_tr_p)),line12->Eval((L_prl1_e+L_prl2_e)/(1000*L_tr_p)),line9->Eval((L_prl1_e+L_prl2_e)/(1000*L_tr_p)),line10->Eval((L_prl1_e+L_prl2_e)/(1000*L_tr_p)));
   //L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e)
 
@@ -140,7 +169,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 
   c1->cd(1);
   //Draw the Cherenkov spectrum.
-  T->Draw("L.cer.asum_c>>h1(1500,0,1500)");
+  T->Draw("L.cer.asum_c>>h1(1500,0,1500)",ct_T3&&ct_1tr&&ct_y&&ct_ph&&ct_th&&ct_dp);
   h1->GetYaxis()->SetTitle("Counts");
   h1->GetXaxis()->SetTitle("L.cer.asum_c");
   h1->SetMaximum(ymax);
@@ -197,7 +226,7 @@ void Cher_Cut_Eff_3He(Int_t run)
   c1->cd(2);
   
   //Draw the shower and preshower with the Cherenkov cut applied.
-  T->Draw("L.prl1.e:L.prl2.e>>h2(1000,80.,3000,1000,80.,3200)","","colz");
+  T->Draw("L.prl1.e:L.prl2.e>>h2(1000,40.,3000,1000,40.,3200)",ct_T3&&ct_1tr&&ct_y&&ct_ph&&ct_th&&ct_dp,"colz");
   h2->GetYaxis()->SetTitle("L.prl1.e");
   h2->GetXaxis()->SetTitle("L.prl2.e");
   h2->GetYaxis()->SetTitleOffset(1.55);
@@ -237,13 +266,13 @@ void Cher_Cut_Eff_3He(Int_t run)
   c6->Divide(1,2);
   
   c6->cd(1);
-  TH2D *h11 = new TH2D("h11",Form("Good e- Region from GC in Pion Rejectors for Run %i Cut: %.1f<GC<%.1f",run,gc_e_lower,gc_e_upper) , 1000, 80., 3000., 1000, 80., 3200.);
+  TH2D *h11 = new TH2D("h11",Form("Good e- Region from GC in Pion Rejectors for Run %i Cut: %.1f<GC<%.1f",run,gc_e_lower,gc_e_upper) , 1000, 40., 3000., 1000, 40., 3200.);
   Double_t e_tot_ct_pr,e_lost_ct_pr = 0.;
 
   for(Int_t i=0;i<nevts;i++) 
     {
       T->GetEntry(i);
-      if(L_cer>gc_e_lower && L_cer<gc_e_upper)
+      if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	{
 	  h11->Fill(L_prl2_e,L_prl1_e);
 	  e_tot_ct_pr++;
@@ -258,13 +287,13 @@ void Cher_Cut_Eff_3He(Int_t run)
   cout<<"Good e- Region from GC has "<<e_tot_ct_pr<<" entries. Diagonal cut on PR causes "<<e_lost_ct_pr<<" likely good e- to be lost, or a loss of "<<(e_lost_ct_pr/e_tot_ct_pr)*100.<<"% of good e-."<<endl;
   
   c6->cd(2);
-  TH2D *h12 = new TH2D("h12",Form("Pion Region from GC in Pion Rejectors for Run %i Cut: %.1f<GC<%.1f",run,gc_pi_lower,gc_pi_upper) , 1000, 80., 3000., 1000, 80., 3200.);
+  TH2D *h12 = new TH2D("h12",Form("Pion Region from GC in Pion Rejectors for Run %i Cut: %.1f<GC<%.1f",run,gc_pi_lower,gc_pi_upper) , 1000, 40., 3000., 1000, 40., 3200.);
   Double_t pi_tot_ct_pr,pi_lost_ct_pr = 0.;
 
   for(Int_t i=0;i<nevts;i++) 
     {
       T->GetEntry(i);
-      if(L_cer>gc_pi_lower && L_cer<gc_pi_upper)
+      if(L_cer>gc_pi_lower && L_cer<gc_pi_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	{
 	  h12->Fill(L_prl2_e,L_prl1_e);
 	  pi_tot_ct_pr++;
@@ -288,7 +317,7 @@ void Cher_Cut_Eff_3He(Int_t run)
   for(Int_t i=0;i<nevts;i++) 
     {
       T->GetEntry(i);
-      if(L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e))
+      if(L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e) && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	{
 	  h13->Fill(L_cer);
 	  e_tot_ct_gc++;
@@ -308,7 +337,7 @@ void Cher_Cut_Eff_3He(Int_t run)
   for(Int_t i=0;i<nevts;i++) 
     {
       T->GetEntry(i);
-      if(L_prl2_e>pr_pi_left && L_prl2_e<pr_pi_right && L_prl1_e>pr_pi_lower && L_prl1_e<pr_pi_upper)
+      if(L_prl2_e>pr_pi_left && L_prl2_e<pr_pi_right && L_prl1_e>pr_pi_lower && L_prl1_e<pr_pi_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	{
 	  h14->Fill(L_cer);
 	  pi_tot_ct_gc++;
@@ -338,7 +367,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e))
+	  if(L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e) && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h3->Fill(L_prl2_e,L_prl1_e);
 	    }
@@ -353,7 +382,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e) && L_cer>GC_cut)
+	  if(L_prl1_e>line9->Eval(L_prl2_e)&&L_prl1_e<line10->Eval(L_prl2_e)&&L_prl1_e>line12->Eval(L_prl2_e)&&L_prl1_e<line11->Eval(L_prl2_e) && L_cer>GC_cut && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h4->Fill(L_prl2_e,L_prl1_e);
 	    }
@@ -374,7 +403,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_prl2_e>pr_pi_left && L_prl2_e<pr_pi_right && L_prl1_e>pr_pi_lower && L_prl1_e<pr_pi_upper)
+	  if(L_prl2_e>pr_pi_left && L_prl2_e<pr_pi_right && L_prl1_e>pr_pi_lower && L_prl1_e<pr_pi_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h5->Fill(L_prl2_e,L_prl1_e);
 	    }
@@ -389,7 +418,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_prl2_e>pr_pi_left && L_prl2_e<pr_pi_right && L_prl1_e>pr_pi_lower && L_prl1_e<pr_pi_upper && L_cer>GC_cut)
+	  if(L_prl2_e>pr_pi_left && L_prl2_e<pr_pi_right && L_prl1_e>pr_pi_lower && L_prl1_e<pr_pi_upper && L_cer>GC_cut && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h6->Fill(L_prl2_e,L_prl1_e);
 	    }
@@ -400,7 +429,7 @@ void Cher_Cut_Eff_3He(Int_t run)
       
       
       //Draw good e- region in GC  with pr cuts giving the number of good e-s removed from the sample by pr cuts.
-      TCanvas* c3=new TCanvas("c4");
+      TCanvas* c4=new TCanvas("c4");
       c4->SetGrid();
       c4->Divide(1,2);
       
@@ -411,7 +440,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_cer>gc_e_lower && L_cer<gc_e_upper)
+	  if(L_cer>gc_e_lower && L_cer<gc_e_upper &&  L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax &&(evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h7->Fill(L_cer);
 	    }
@@ -426,7 +455,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_prl1_e>line13->Eval(L_prl2_e))
+	  if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_prl1_e>line13->Eval(L_prl2_e) && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h8->Fill(L_cer);
 	    }
@@ -436,7 +465,7 @@ void Cher_Cut_Eff_3He(Int_t run)
       
       
       //Draw good pion region in GC  with pr cuts giving the number of pions removed from the sample by pr cuts.
-      TCanvas* c3=new TCanvas("c5");
+      TCanvas* c5=new TCanvas("c5");
       c5->SetGrid();
       c5->Divide(1,2);
       
@@ -447,7 +476,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_cer>gc_pi_lower && L_cer<gc_pi_upper)
+	  if(L_cer>gc_pi_lower && L_cer<gc_pi_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h9->Fill(L_cer);
 	    }
@@ -462,7 +491,7 @@ void Cher_Cut_Eff_3He(Int_t run)
 	{
 	  T->GetEntry(i);
 	  //T->Show(i);
-	  if(L_cer>gc_pi_lower && L_cer<gc_pi_upper && L_prl1_e>line13->Eval(L_prl2_e))
+	  if(L_cer>gc_pi_lower && L_cer<gc_pi_upper && L_prl1_e>line13->Eval(L_prl2_e) && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1)
 	    {
 	      h10->Fill(L_cer);
 	    }
@@ -471,5 +500,66 @@ void Cher_Cut_Eff_3He(Int_t run)
       cout<<"Pions remaining after PR cut applied = "<<h10->GetEntries()<<"/"<<h9->GetEntries()<<" = "<<h10->GetEntries()/h9->GetEntries()<<" = "<<(h10->GetEntries()/h9->GetEntries())*100.<<"% of pions survive PR cut."<<endl;
       
     }//End if show_sample_regions.
+
+  //Invert the PR cut to see if good electrons are being lost.
+  TCanvas* c8=new TCanvas("c8");
+  c8->SetGrid();
+  c8->Divide(2,2);
+  
+  //Plot events below PR cut with other reasonable cuts in Y.
+  c8->cd(1);
+  TH1D *h15 = new TH1D("h15", "Events Below PR Cut in Y", 200, -0.04, 0.04);
+
+  for(Int_t i=0;i<nevts;i++) 
+    {
+      T->GetEntry(i);
+      if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1 && L_prl1_e<line13->Eval(L_prl2_e))
+	{
+	  h15->Fill(L_tr_tg_y[0]);
+	}
+    }
+  h15->Draw("");
+
+  //Plot events below PR cut with other reasonable cuts in dp.
+  c8->cd(2);
+  TH1D *h16 = new TH1D("h16", "Events Below PR Cut in dp", 200, -0.03, 0.04);
+
+  for(Int_t i=0;i<nevts;i++) 
+    {
+      T->GetEntry(i);
+      if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1 && L_prl1_e<line13->Eval(L_prl2_e))
+	{
+	  h16->Fill(L_tg_dp[0]);
+	}
+    }
+  h16->Draw("");
+
+  //Plot events below PR cut with other reasonable cuts in phi.
+  c8->cd(3);
+  TH1D *h17 = new TH1D("h17", "Events Below PR Cut in phi", 200, -0.04, 0.04);
+
+  for(Int_t i=0;i<nevts;i++) 
+    {
+      T->GetEntry(i);
+      if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1 && L_prl1_e<line13->Eval(L_prl2_e))
+	{
+	  h17->Fill(L_tg_ph[0]);
+	}
+    }
+  h17->Draw("");
+
+  //Plot events below PR cut with other reasonable cuts in theta.
+  c8->cd(4);
+  TH1D *h18 = new TH1D("h18", "Events Below PR Cut in theta", 200, -0.05, 0.05);
+
+  for(Int_t i=0;i<nevts;i++) 
+    {
+      T->GetEntry(i);
+      if(L_cer>gc_e_lower && L_cer<gc_e_upper && L_tr_tg_y[0]>ymin && L_tr_tg_y[0]<ymax && L_tg_th[0]>thmin && L_tg_th[0]<thmax && L_tg_ph[0]>phmin && L_tg_ph[0]<phmax && L_tg_dp[0]>dpmin && L_tg_dp[0]<dpmax && (evtypebits&1<<3)==1<<3 && L_tr_n==1 && L_prl1_e<line13->Eval(L_prl2_e))
+	{
+	  h18->Fill(L_tg_th[0]);
+	}
+    }
+  h18->Draw("");
   
 }
