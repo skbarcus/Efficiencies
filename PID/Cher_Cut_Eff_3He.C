@@ -99,7 +99,7 @@ void Cher_Cut_Eff_3He()
   */
   Int_t show_sample_regions_in_opposite = 1;
   Int_t show_sample_regions = 0;
-  Double_t ymax = 10000;
+  Double_t ymax_cher = 2000;
   Double_t GC_cut = 60.;//Previously 150 w/0 T3 cut.
   Double_t ymin = -0.03, ymax = 0.03;
   Double_t thmin = -0.042, thmax = 0.049;
@@ -165,16 +165,32 @@ void Cher_Cut_Eff_3He()
   //TPad *pad1 = new TPad("pad1","pad1",0.0,0.0,1.0,0.96);
   //pad1->Draw();
   //pad1->Divide(1,2);
-  c1->Divide(1,2);
+  //c1->Divide(1,2);
 
-  c1->cd(1);
+  //c1->cd(1);
   //Draw the Cherenkov spectrum.
   T->Draw("L.cer.asum_c>>h1(1500,0,1500)",ct_T3&&ct_1tr&&ct_y&&ct_ph&&ct_th&&ct_dp);
   h1->GetYaxis()->SetTitle("Counts");
   h1->GetXaxis()->SetTitle("L.cer.asum_c");
-  h1->SetMaximum(ymax);
-  h1->GetYaxis()->SetTitleOffset(1.3);
+  h1->SetMaximum(ymax_cher);
+  //h1->GetYaxis()->SetTitleOffset(1.3);
   gPad->SetLogy();
+
+  h1->SetTitle("PID GC");
+  //h1->GetXaxis()->SetTitle("GC ADC");
+  //h1->GetXaxis()->CenterTitle();
+  //h1->GetYaxis()->SetTitle("Counts");
+  // h1->GetYaxis()->CenterTitle();
+  //h1->GetYaxis()->SetTitleOffset(1.4);
+  gStyle->SetTitleFontSize(0.08);
+  h1->GetYaxis()->CenterTitle(true);
+  h1->GetYaxis()->SetLabelSize(0.035);
+  h1->GetYaxis()->SetTitleSize(0.06);
+  h1->GetYaxis()->SetTitleOffset(0.75);
+  h1->GetXaxis()->CenterTitle(true);
+  h1->GetXaxis()->SetLabelSize(0.05);
+  h1->GetXaxis()->SetTitleSize(0.06);
+  h1->GetXaxis()->SetTitleOffset(0.75);
   
   Int_t cermin = 300;
   
@@ -223,16 +239,34 @@ void Cher_Cut_Eff_3He()
   line4->SetLineColor(kRed);
   line4->Draw("same");
 
-  c1->cd(2);
+  TCanvas* cpr=new TCanvas("cpr");
+  cpr->SetGrid();
+  //c1->cd(2);
   
   //Draw the shower and preshower with the Cherenkov cut applied.
   T->Draw("L.prl1.e:L.prl2.e>>h2(1000,40.,3000,1000,40.,3200)",ct_T3&&ct_1tr&&ct_y&&ct_ph&&ct_th&&ct_dp,"colz");
   h2->GetYaxis()->SetTitle("L.prl1.e");
   h2->GetXaxis()->SetTitle("L.prl2.e");
-  h2->GetYaxis()->SetTitleOffset(1.55);
+  //h2->GetYaxis()->SetTitleOffset(1.55);
+
+  h2->SetTitle("PID PR");
+  //h2->GetXaxis()->SetTitle("GC ADC");
+  //h2->GetXaxis()->CenterTitle();
+  //h2->GetYaxis()->SetTitle("Counts");
+  //h2->GetYaxis()->CenterTitle();
+  //h2->GetYaxis()->SetTitleOffset(1.4);
+  h2->GetYaxis()->CenterTitle(true);
+  h2->GetYaxis()->SetLabelSize(0.035);
+  h2->GetYaxis()->SetTitleSize(0.06);
+  h2->GetYaxis()->SetTitleOffset(0.75);
+  h2->GetXaxis()->CenterTitle(true);
+  h2->GetXaxis()->SetLabelSize(0.05);
+  h2->GetXaxis()->SetTitleSize(0.06);
+  h2->GetXaxis()->SetTitleOffset(0.75);
 
   //Draw pion rejector cuts.
-  c1->Update();
+  //c1->Update();
+  cpr->Update();
   //Pion rejector pion cuts.
   //Bottom line.
   TLine *line5 = new TLine(pr_pi_left, pr_pi_lower, pr_pi_right, pr_pi_lower);
