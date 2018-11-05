@@ -140,6 +140,7 @@ void Trigger_Eff()
       
       effT3 = (psT3*nT3)/(psT3*nT3+psT4*nT4);
       Trig_eff[i] = effT3;
+      cout<<"Total T3 = "<<psT3*nT3<<"   Total T4 = "<<psT4*nT4<<"   Total T3+T4 = "<<psT3*nT3+psT4*nT4<<endl;
       cout<<"Trigger efficiency for T3 = "<<effT3<<endl;
       
       //h1->Delete();
@@ -167,8 +168,17 @@ void Trigger_Eff()
   h1->SetMarkerSize(2);
   h1->SetMarkerStyle(33);
   h1->GetXaxis()->SetTitle("Run Number");
-  h1->GetXaxis()->CenterTitle();
+  //h1->GetXaxis()->CenterTitle();
   h1->GetYaxis()->SetTitle("Efficiency of T3");
-  h1->GetYaxis()->CenterTitle();
-  h1->GetYaxis()->SetTitleOffset(1.4);
+  // h1->GetYaxis()->CenterTitle();
+  //h1->GetYaxis()->SetTitleOffset(1.4);
+  gStyle->SetTitleFontSize(0.08);
+  h1->GetYaxis()->CenterTitle(true);
+  h1->GetYaxis()->SetLabelSize(0.035);
+  h1->GetYaxis()->SetTitleSize(0.06);
+  h1->GetYaxis()->SetTitleOffset(0.75);
+  h1->GetXaxis()->CenterTitle(true);
+  h1->GetXaxis()->SetLabelSize(0.05);
+  h1->GetXaxis()->SetTitleSize(0.06);
+  h1->GetXaxis()->SetTitleOffset(0.75);
 }
