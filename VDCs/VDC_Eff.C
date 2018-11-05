@@ -91,37 +91,43 @@ void VDC_Eff()
 	  //T->Show(j);
 	  //cout<<"L.s2.trn = "<<L_s2_trn<<endl;
 
-	  if(L_tr_n==0. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  //if(L_tr_n==0. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  if(L_tr_n==0. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3)
 	    //if(L_tr_n==0. && L_cer>300 && L_cer<350)
 	    {
 	      treq0++; 
 	      //cout<<"treq0 = "<<treq0<<endl;
 	    }
-	  else if(L_tr_n==1. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  //else if(L_tr_n==1. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  else if(L_tr_n==1. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3)
 	    //else if(L_tr_n==1. && L_cer>300 && L_cer<350)
 	    {
 	      treq1++; 
 	      //cout<<"treq1 = "<<treq1<<endl;
 	    }
-	  else if(L_tr_n==2. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  //else if(L_tr_n==2. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  else if(L_tr_n==2. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3)
 	    //else if(L_tr_n==2. && L_cer>300 && L_cer<350)
 	    {
 	      treq2++; 
 	      //cout<<"treq2 = "<<treq2<<endl;
 	    }
-	  else if(L_tr_n==3. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  //else if(L_tr_n==3. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  else if(L_tr_n==3. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3)
 	    //else if(L_tr_n==3. && L_cer>300 && L_cer<350)
 	    {
 	      treq3++; 
 	      //cout<<"treq3 = "<<treq3<<endl;
 	    }
-	  else if(L_tr_n==4. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  //else if(L_tr_n==4. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  else if(L_tr_n==4. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3)
 	    //else if(L_tr_n==4. && L_cer>300 && L_cer<350)
 	    {
 	      treq4++; 
 	      //cout<<"treq4 = "<<treq4<<endl;
 	    }
-	  else if(L_tr_n>=5. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  //else if(L_tr_n>=5. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3 && L_s2_trn==1)
+	  else if(L_tr_n>=5. && L_prl1_e>(-L_prl2_e+2000) && (evtypebits&1<<3)==1<<3)
 	    //else if(L_tr_n>=5. && L_cer>300 && L_cer<350)
 	    {
 	      trgte5++;

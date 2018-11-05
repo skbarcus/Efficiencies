@@ -125,6 +125,37 @@ void Cherenkov_Eff()
   c1->cd(2);
   T->Draw("L.cer.try:L.cer.trx>>h2(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb&&ct_pr,"colz");
 
+  h1->GetXaxis()->SetTitle("Gas Cherenkov Y");
+  //h1->GetXaxis()->CenterTitle();
+  h1->GetYaxis()->SetTitle("Gas Cherenkov X");
+  //h1->GetYaxis()->CenterTitle();
+  //h1->GetYaxis()->SetTitleOffset(1.4);
+  gStyle->SetTitleFontSize(0.08);
+  h1->SetTitle("T7 with Physics Cuts");
+  h1->GetYaxis()->CenterTitle(true);
+  h1->GetYaxis()->SetLabelSize(0.03);
+  h1->GetYaxis()->SetTitleSize(0.035);
+  h1->GetYaxis()->SetTitleOffset(1.5);
+  h1->GetXaxis()->CenterTitle(true);
+  h1->GetXaxis()->SetLabelSize(0.035);
+  h1->GetXaxis()->SetTitleSize(0.035);
+  h1->GetXaxis()->SetTitleOffset(1.);
+
+  h2->SetTitle("T3 and T7 with Physics Cuts");
+  h2->GetXaxis()->SetTitle("Gas Cherenkov Y");
+  //h2->GetXaxis()->CenterTitle();
+  h2->GetYaxis()->SetTitle("Gas Cherenkov X");
+  //h2->GetYaxis()->CenterTitle();
+  //h2->GetYaxis()->SetTitleOffset(1.4);
+  h2->GetYaxis()->CenterTitle(true);
+  h2->GetYaxis()->SetLabelSize(0.03);
+  h2->GetYaxis()->SetTitleSize(0.035);
+  h2->GetYaxis()->SetTitleOffset(1.5);
+  h2->GetXaxis()->CenterTitle(true);
+  h2->GetXaxis()->SetLabelSize(0.035);
+  h2->GetXaxis()->SetTitleSize(0.035);
+  h2->GetXaxis()->SetTitleOffset(1.);
+
   //T->Draw("L.cer.try:L.cer.trx>>h1(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T7&&ct_y&&ct_xb,"colz");
   //c1->cd(2);
   //T->Draw("L.cer.trx:L.cer.try>>h2(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_T7&&ct_y&&ct_xb,"colz");
@@ -137,4 +168,19 @@ void Cherenkov_Eff()
   //c2->cd(1);
   T->Draw("L.cer.try:L.cer.trx>>h3(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb&&ct_pr,"colz");
   //T->Draw("L.cer.try:L.cer.trx>>h3(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_y&&ct_xb,"colz");
+
+  h3->SetTitle("T3 with Physics Cuts");
+  h3->GetXaxis()->SetTitle("Gas Cherenkov Y");
+  //h3->GetXaxis()->CenterTitle();
+  h3->GetYaxis()->SetTitle("Gas Cherenkov X");
+  //h3->GetYaxis()->CenterTitle();
+  //h3->GetYaxis()->SetTitleOffset(1.4);
+  h3->GetYaxis()->CenterTitle(true);
+  h3->GetYaxis()->SetLabelSize(0.035);
+  h3->GetYaxis()->SetTitleSize(0.035);
+  h3->GetYaxis()->SetTitleOffset(0.75);
+  h3->GetXaxis()->CenterTitle(true);
+  h3->GetXaxis()->SetLabelSize(0.035);
+  h3->GetXaxis()->SetTitleSize(0.035);
+  h3->GetXaxis()->SetTitleOffset(0.75);
 }
