@@ -125,9 +125,10 @@ void Cherenkov_Eff()
   c1->cd(2);
   T->Draw("L.cer.try:L.cer.trx>>h2(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_T7&&ct_ep&&ct_th&&ct_ph&&ct_dp&&ct_y&&ct_xb&&ct_pr,"colz");
 
-  h1->GetXaxis()->SetTitle("Gas Cherenkov Y");
+  //gStyle->SetOptStat(0);
+  h1->GetXaxis()->SetTitle("Y Position of Electron Track in Detector Plane (m)");//("Gas Cherenkov Y")
   //h1->GetXaxis()->CenterTitle();
-  h1->GetYaxis()->SetTitle("Gas Cherenkov X");
+  h1->GetYaxis()->SetTitle("X Position of Electron Track in Detector Plane (m)");
   //h1->GetYaxis()->CenterTitle();
   //h1->GetYaxis()->SetTitleOffset(1.4);
   gStyle->SetTitleFontSize(0.08);
@@ -142,9 +143,9 @@ void Cherenkov_Eff()
   h1->GetXaxis()->SetTitleOffset(1.);
 
   h2->SetTitle("T3 and T7 with Physics Cuts");
-  h2->GetXaxis()->SetTitle("Gas Cherenkov Y");
+  h2->GetXaxis()->SetTitle("Y Position of Electron Track in Detector Plane (m)");
   //h2->GetXaxis()->CenterTitle();
-  h2->GetYaxis()->SetTitle("Gas Cherenkov X");
+  h2->GetYaxis()->SetTitle("X Position of Electron Track in Detector Plane (m)");
   //h2->GetYaxis()->CenterTitle();
   //h2->GetYaxis()->SetTitleOffset(1.4);
   h2->GetYaxis()->CenterTitle(true);
@@ -170,9 +171,9 @@ void Cherenkov_Eff()
   //T->Draw("L.cer.try:L.cer.trx>>h3(200,-1.,1.,200,-.1,.1)",ct_1tr&&ct_T3&&ct_y&&ct_xb,"colz");
 
   h3->SetTitle("T3 with Physics Cuts");
-  h3->GetXaxis()->SetTitle("Gas Cherenkov Y");
+  h3->GetXaxis()->SetTitle("Y Position of Electron Track in Detector Plane (m)");
   //h3->GetXaxis()->CenterTitle();
-  h3->GetYaxis()->SetTitle("Gas Cherenkov X");
+  h3->GetYaxis()->SetTitle("X Position of Electron Track in Detector Plane (m)");
   //h3->GetYaxis()->CenterTitle();
   //h3->GetYaxis()->SetTitleOffset(1.4);
   h3->GetYaxis()->CenterTitle(true);
